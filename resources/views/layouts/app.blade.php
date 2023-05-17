@@ -53,6 +53,12 @@
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="/google-auth/redirect">
+                                    <img src="/images/google.png" alt="Google" width="24" height="24">
+                                </a>
+                            </li>                            
+                            
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>

@@ -4,8 +4,30 @@ use App\Http\Controllers\TrelloController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
 
 // routes/web.php
+
+Route::get('/google-auth/redirect', function () {
+    return Socialite::driver('google')->redirect();
+});
+ 
+Route::get('/google-auth/callback', function () {
+    $user_google = Socialite::driver('google')->stateless()->user();
+
+    $user = User::updateOrCreate([
+        'google_id' => $user_google->id,
+    ], [
+        'name' => $user_google->name,
+        'email' => $user_google->email,
+    ]);
+
+    Auth::login($user);
+    return redirect('/');
+    
+    // $user->token
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/api/trello', [HomeController::class, 'trelloApi'])->name('api.trello');
